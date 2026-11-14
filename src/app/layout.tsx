@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'NAMRIA Field Observation Form LC-02',
   description: 'Official Field Observation for Land Classification of Unclassified Public Forest',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -16,6 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="theme-color" content="#182848" />
+      </head>
       <body className={`${inter.className} bg-slate-200 text-slate-900 antialiased`}>
         {children}
       </body>
