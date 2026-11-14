@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type FieldObservation } from '@/db/db';
+import { exportObservationToPDF } from '../utils/exportPdf';
 
 export default function Home() {
   const [view, setView] = useState<'dashboard' | 'form'>('dashboard');
@@ -70,6 +71,12 @@ export default function Home() {
     name: 'namriaSurveyTeam'
   });
 
+  // Function para buksan at i-load ang sinave na form pabalik sa form view
+  const handleViewObservation = (obs: FieldObservation) => {
+    reset(obs);
+    setView('form');
+  };
+
   const onSubmit = async (data: FieldObservation) => {
     try {
       await db.observations.add({
@@ -91,7 +98,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen py-10 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 bg-slate-100">
       <div className="max-w-4xl mx-auto">
         {view === 'dashboard' ? (
           <div className="space-y-6">
@@ -101,7 +108,11 @@ export default function Home() {
                 <p className="text-xs text-teal-300 mt-1">Land Classification of Unclassified Public Forest (Offline Mode)</p>
               </div>
               <button
-                onClick={() => setView('form')}
+                type="button"
+                onClick={() => {
+                  reset(); // I-reset mula sa umpisa kapag gumagawa ng bago
+                  setView('form');
+                }}
                 className="mt-4 sm:mt-0 px-5 py-2.5 bg-[#009688] hover:bg-teal-700 text-white font-bold text-xs uppercase tracking-wider rounded shadow transition"
               >
                 + New Field Observation
@@ -120,8 +131,11 @@ export default function Home() {
               ) : (
                 <div className="space-y-3">
                   {observations.map((obs) => (
-                    <div key={obs.id} className="p-4 bg-slate-50 border rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                      <div>
+                    <div 
+                      key={obs.id} 
+                      className="p-4 bg-slate-50 border rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 hover:bg-slate-100 transition"
+                    >
+                      <div className="cursor-pointer flex-1" onClick={() => handleViewObservation(obs)}>
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-sm text-[#182848]">Corner: {obs.cornerNo || 'N/A'}</span>
                           <span className="text-[10px] bg-teal-100 text-teal-800 px-2 py-0.5 rounded font-semibold">{obs.proposedClassification}</span>
@@ -129,10 +143,24 @@ export default function Home() {
                         <p className="text-xs text-slate-600 mt-1">
                           Location: {obs.barangay}, {obs.municipality}, {obs.province}
                         </p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">Date Observed: {obs.observationDate}</p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">Date Observed: {obs.observationDate} (Click to view)</p>
                       </div>
-                      <div className="text-xs font-mono text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
-                        Saved Offline (Dexie)
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleViewObservation(obs)}
+                          className="px-3 py-1.5 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded shadow transition"
+                        >
+                          View / Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => exportObservationToPDF(obs)}
+                          className="px-3 py-1.5 bg-[#182848] hover:bg-[#009688] text-white text-xs font-bold rounded shadow transition"
+                        >
+                          Export PDF
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -405,7 +433,7 @@ export default function Home() {
 
                 <div className="p-3 border-b border-slate-300 bg-slate-50">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-bold text-[#182848] uppercase">Representatives from DENR Regional Office / PENRO / CENRO / LGU / Other Offices</span>
+                    <span className="font-bold text-[#182848] uppercase text-[10px] sm:text-xs">Representatives from DENR Regional Office / PENRO / CENRO / LGU / Other Offices</span>
                     <button type="button" onClick={() => appendDenr({ name: '', office: '', designation: '', date: '' })} className="px-2 py-1 bg-[#009688] text-white font-bold rounded text-[10px]">
                       + Add Representative
                     </button>
