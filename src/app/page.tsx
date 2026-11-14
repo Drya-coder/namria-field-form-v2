@@ -71,7 +71,6 @@ export default function Home() {
     name: 'namriaSurveyTeam'
   });
 
-  // Function para buksan at i-load ang sinave na form pabalik sa form view
   const handleViewObservation = (obs: FieldObservation) => {
     reset(obs);
     setView('form');
@@ -109,11 +108,12 @@ export default function Home() {
               </div>
               <button
                 type="button"
-                onClick={() => {
-                  reset(); // I-reset mula sa umpisa kapag gumagawa ng bago
+                onClick={(e) => {
+                  e.preventDefault();
+                  reset();
                   setView('form');
                 }}
-                className="mt-4 sm:mt-0 px-5 py-2.5 bg-[#009688] hover:bg-teal-700 text-white font-bold text-xs uppercase tracking-wider rounded shadow transition"
+                className="mt-4 sm:mt-0 px-6 py-3 bg-[#009688] active:bg-teal-800 text-white font-bold text-xs uppercase tracking-wider rounded-md shadow-lg cursor-pointer transition touch-manipulation"
               >
                 + New Field Observation
               </button>
