@@ -190,7 +190,8 @@ export default function Home() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
+            {/* Added pb-32 so mobile error badges / buttons won't overlap inputs */}
+            <form onSubmit={handleSubmit(onSubmit)} className="p-6 pb-32 space-y-4">
               <div className="text-center border-b-2 border-slate-800 pb-3">
                 <h1 className="text-base font-black uppercase text-[#182848]">
                   FIELD OBSERVATION FOR LAND CLASSIFICATION OF UNCLASSIFIED PUBLIC FOREST
