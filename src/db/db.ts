@@ -2,29 +2,29 @@ import Dexie, { type Table } from 'dexie';
 
 export interface FieldObservation {
   id?: number;
-  formTitle: string;
-  cornerNo: string;
+  formTitle?: string;
+  cornerNo?: string;
   mapCodeNo?: string;
-  proposedClassification: string;
+  proposedClassification?: string;
   sitio?: string;
-  barangay: string;
-  municipality: string;
-  province: string;
+  barangay?: string;
+  municipality?: string;
+  province?: string;
   lcCornerNo?: string;
   lcMapNo?: string;
   lcArcProgNo?: string;
   lcStNo?: string;
   lcStProgNo?: string;
   lcIdNo?: string;
-  observationDate: string;
+  observationDate?: string;
   timeStarted?: string;
   timeEnded?: string;
   duration?: string;
   instrumentType?: string;
   brandModel?: string;
   method?: string;
-  northing?: string;
   easting?: string;
+  northing?: string;
   datum?: string;
   gnssAccuracy?: string;
   baseStationName?: string;
@@ -40,21 +40,25 @@ export interface FieldObservation {
   topographySlope?: string;
   existingLandUse?: string;
   claimants?: string;
-  denrRepresentatives: Array<{ name: string; office: string; designation: string; date: string }>;
-  namriaSurveyTeam: Array<{ name: string; designation: string; date: string }>;
+  denrRepresentatives?: Array<{ name?: string; office?: string; designation?: string; date?: string }>;
+  namriaSurveyTeam?: Array<{ name?: string; designation?: string; date?: string }>;
+  sketchMapDataUrl?: string;
+  monumentPhotoDataUrl?: string;
+  adLandPhotoDataUrl?: string;
+  forestlandPhotoDataUrl?: string;
   createdAt?: Date;
   synced?: boolean;
 }
 
-export class NamriaDatabase extends Dexie {
-  observations!: Table<FieldObservation>;
+export class FieldObservationDB extends Dexie {
+  observations!: Table<FieldObservation, number>;
 
   constructor() {
-    super('NamriaFieldDB');
+    super('NamriaFieldObservationDB');
     this.version(1).stores({
-      observations: '++id, cornerNo, barangay, observationDate, createdAt'
+      observations: '++id, cornerNo, barangay, municipality, province, observationDate, createdAt'
     });
   }
 }
 
-export const db = new NamriaDatabase();
+export const db = new FieldObservationDB();

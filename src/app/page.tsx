@@ -17,12 +17,6 @@ const emptyValues: FieldObservation = {
   barangay: '',
   municipality: '',
   province: '',
-  lcCornerNo: '',
-  lcMapNo: '',
-  lcArcProgNo: '',
-  lcStNo: '',
-  lcStProgNo: '',
-  lcIdNo: '',
   observationDate: '',
   timeStarted: '',
   timeEnded: '',
@@ -48,7 +42,11 @@ const emptyValues: FieldObservation = {
   existingLandUse: '',
   claimants: '',
   denrRepresentatives: [{ name: '', office: '', designation: '', date: '' }],
-  namriaSurveyTeam: [{ name: '', designation: 'FST Member', date: '' }]
+  namriaSurveyTeam: [{ name: '', designation: 'FST Member', date: '' }],
+  sketchMapDataUrl: '',
+  monumentPhotoDataUrl: '',
+  adLandPhotoDataUrl: '',
+  forestlandPhotoDataUrl: ''
 };
 
 export default function Home() {
@@ -60,7 +58,6 @@ export default function Home() {
     setIsMounted(true);
   }, []);
 
-  // Safe live query with error handling for mobile browsers
   const observations = useLiveQuery(async () => {
     try {
       if (!db?.observations) return [];
@@ -107,9 +104,9 @@ export default function Home() {
   const onSubmit = async (data: FieldObservation) => {
     try {
       if (db?.observations) {
-        await db.observations.add({
+        await db.observations.put({
           ...data,
-          createdAt: new Date(),
+          createdAt: data.createdAt || new Date(),
           synced: false
         });
       }
@@ -276,39 +273,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* LC MAP APPROVAL */}
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-4 shadow-sm">
-                <h3 className="font-bold text-slate-700 text-xs uppercase tracking-wider border-b pb-2">
-                  To Be Filled Out Upon Approval of Proposed LC Map
-                </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
-                  <div>
-                    <label className="block font-medium text-slate-600 mb-1">Corner No.:</label>
-                    <input type="text" {...register('lcCornerNo')} className="w-full border border-slate-300 p-2.5 rounded-xl bg-white focus:ring-2 focus:ring-[#009688] outline-none" />
-                  </div>
-                  <div>
-                    <label className="block font-medium text-slate-600 mb-1">Map No.:</label>
-                    <input type="text" {...register('lcMapNo')} className="w-full border border-slate-300 p-2.5 rounded-xl bg-white focus:ring-2 focus:ring-[#009688] outline-none" />
-                  </div>
-                  <div>
-                    <label className="block font-medium text-slate-600 mb-1">ARC Prog. No.:</label>
-                    <input type="text" {...register('lcArcProgNo')} className="w-full border border-slate-300 p-2.5 rounded-xl bg-white focus:ring-2 focus:ring-[#009688] outline-none" />
-                  </div>
-                  <div>
-                    <label className="block font-medium text-slate-600 mb-1">St. No.:</label>
-                    <input type="text" {...register('lcStNo')} className="w-full border border-slate-300 p-2.5 rounded-xl bg-white focus:ring-2 focus:ring-[#009688] outline-none" />
-                  </div>
-                  <div>
-                    <label className="block font-medium text-slate-600 mb-1">St. Prog. No.:</label>
-                    <input type="text" {...register('lcStProgNo')} className="w-full border border-slate-300 p-2.5 rounded-xl bg-white focus:ring-2 focus:ring-[#009688] outline-none" />
-                  </div>
-                  <div>
-                    <label className="block font-medium text-slate-600 mb-1">Id. No.:</label>
-                    <input type="text" {...register('lcIdNo')} className="w-full border border-slate-300 p-2.5 rounded-xl bg-white focus:ring-2 focus:ring-[#009688] outline-none" />
-                  </div>
-                </div>
-              </div>
-
               {/* SECTION II */}
               <div className="bg-slate-50/70 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-4 shadow-sm">
                 <h3 className="font-bold uppercase text-[#182848] text-xs tracking-wider border-b pb-2">
@@ -454,6 +418,135 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* PAGE 2: SKETCH MAP & PHOTOGRAPHS */}
+              <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-6 shadow-sm">
+                <div className="border-b pb-2 flex justify-between items-center">
+                  <h3 className="font-bold uppercase text-[#182848] text-xs tracking-wider">
+                    Page 2: Sketch Map & Photo Documentation
+                  </h3>
+                  <span className="text-[10px] bg-teal-100 text-teal-800 px-2 py-0.5 rounded font-semibold">Official Form Page 2</span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* TOP-LEFT: SKETCH MAP */}
+                  <div className="border border-slate-300 rounded-xl p-4 bg-slate-50 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <label className="font-bold text-xs uppercase text-slate-700">1. Sketch Map</label>
+                      <span className="text-[10px] text-slate-500 font-mono">[North Arrow Fixed]</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500">I-upload o iguhit ang sketch map kasama ang mga kalapit na landmark.</p>
+                    
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (uploadEvent) => {
+                            setValue('sketchMapDataUrl', uploadEvent.target?.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#009688] file:text-white hover:file:bg-teal-700 cursor-pointer"
+                    />
+
+                    {watch('sketchMapDataUrl') && (
+                      <div className="mt-2 border rounded-lg overflow-hidden bg-white h-48">
+                        <img src={watch('sketchMapDataUrl')} alt="Sketch Map Preview" className="w-full h-full object-contain" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* TOP-RIGHT: PICTURE OF CONCRETE MONUMENT */}
+                  <div className="border border-slate-300 rounded-xl p-4 bg-slate-50 space-y-3">
+                    <label className="font-bold text-xs uppercase text-slate-700 block">2. Picture of Concrete Monument</label>
+                    <p className="text-[11px] text-slate-500">Kunan o i-upload ang larawan ng monolitong kongkreto / corner marker.</p>
+                    
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (uploadEvent) => {
+                            setValue('monumentPhotoDataUrl', uploadEvent.target?.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#009688] file:text-white hover:file:bg-teal-700 cursor-pointer"
+                    />
+
+                    {watch('monumentPhotoDataUrl') && (
+                      <div className="mt-2 border rounded-lg overflow-hidden bg-white h-48">
+                        <img src={watch('monumentPhotoDataUrl')} alt="Monument Preview" className="w-full h-full object-contain" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                  {/* MIDDLE: PICTURE FACING PROPOSED A&D LAND */}
+                  <div className="border border-slate-300 rounded-xl p-4 bg-slate-50 space-y-3">
+                    <label className="font-bold text-xs uppercase text-slate-700 block">3. Picture Facing Proposed A&D Land</label>
+                    <p className="text-[11px] text-slate-500">I-upload ang kuha patungo sa Proposed Alienable & Disposable land.</p>
+                    
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (uploadEvent) => {
+                            setValue('adLandPhotoDataUrl', uploadEvent.target?.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#009688] file:text-white hover:file:bg-teal-700 cursor-pointer"
+                    />
+
+                    {watch('adLandPhotoDataUrl') && (
+                      <div className="mt-2 border rounded-lg overflow-hidden bg-white h-48">
+                        <img src={watch('adLandPhotoDataUrl')} alt="A&D Land Preview" className="w-full h-full object-contain" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* BOTTOM: PICTURE FACING PROPOSED FORESTLAND */}
+                  <div className="border border-slate-300 rounded-xl p-4 bg-slate-50 space-y-3">
+                    <label className="font-bold text-xs uppercase text-slate-700 block">4. Picture Facing Proposed Forestland</label>
+                    <p className="text-[11px] text-slate-500">I-upload ang kuha patungo sa Proposed Forestland.</p>
+                    
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (uploadEvent) => {
+                            setValue('forestlandPhotoDataUrl', uploadEvent.target?.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#009688] file:text-white hover:file:bg-teal-700 cursor-pointer"
+                    />
+
+                    {watch('forestlandPhotoDataUrl') && (
+                      <div className="mt-2 border rounded-lg overflow-hidden bg-white h-48">
+                        <img src={watch('forestlandPhotoDataUrl')} alt="Forestland Preview" className="w-full h-full object-contain" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               {/* SECTION V */}
               <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-5 shadow-sm">
                 <h3 className="font-bold uppercase text-[#182848] text-xs tracking-wider border-b pb-2">
@@ -465,64 +558,64 @@ export default function Home() {
                   <input type="text" {...register('claimants')} className="w-full border border-slate-300 p-2.5 rounded-xl shadow-sm focus:ring-2 focus:ring-[#009688] outline-none" placeholder="Claimant names if any" />
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-3 pt-2">
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-[#182848] text-xs uppercase">Representatives (DENR / PENRO / CENRO / LGU)</span>
-                    <button type="button" onClick={() => appendDenr({ name: '', office: '', designation: '', date: '' })} className="px-3 py-1.5 bg-[#009688] hover:bg-teal-700 text-white font-bold rounded-xl text-xs shadow transition cursor-pointer">
+                    <span className="font-bold text-slate-700 uppercase text-[11px]">DENR Representatives</span>
+                    <button type="button" onClick={() => appendDenr({ name: '', office: '', designation: '', date: '' })} className="px-3 py-1.5 bg-[#009688] hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
                       + Add Representative
                     </button>
                   </div>
                   {denrFields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm">
+                    <div key={field.id} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end bg-slate-50 p-3 rounded-xl border border-slate-200">
                       <div className="sm:col-span-4">
                         <label className="text-[10px] font-bold text-slate-600">Name</label>
-                        <input type="text" {...register(`denrRepresentatives.${index}.name` as const)} className="w-full border border-slate-300 p-2 rounded-lg bg-white" placeholder="Full Name" />
+                        <input type="text" {...register(`denrRepresentatives.${index}.name` as const)} className="w-full border p-2 rounded-lg bg-white outline-none" placeholder="Full Name" />
                       </div>
                       <div className="sm:col-span-3">
                         <label className="text-[10px] font-bold text-slate-600">Office</label>
-                        <input type="text" {...register(`denrRepresentatives.${index}.office` as const)} className="w-full border border-slate-300 p-2 rounded-lg bg-white" placeholder="Office" />
+                        <input type="text" {...register(`denrRepresentatives.${index}.office` as const)} className="w-full border p-2 rounded-lg bg-white outline-none" placeholder="Office" />
                       </div>
                       <div className="sm:col-span-3">
                         <label className="text-[10px] font-bold text-slate-600">Designation</label>
-                        <input type="text" {...register(`denrRepresentatives.${index}.designation` as const)} className="w-full border border-slate-300 p-2 rounded-lg bg-white" placeholder="Designation" />
+                        <input type="text" {...register(`denrRepresentatives.${index}.designation` as const)} className="w-full border p-2 rounded-lg bg-white outline-none" placeholder="Designation" />
                       </div>
                       <div className="sm:col-span-2 flex items-center gap-2">
                         <div className="flex-1">
                           <label className="text-[10px] font-bold text-slate-600">Date</label>
-                          <input type="date" {...register(`denrRepresentatives.${index}.date` as const)} className="w-full border border-slate-300 p-2 rounded-lg bg-white" />
+                          <input type="date" {...register(`denrRepresentatives.${index}.date` as const)} className="w-full border p-2 rounded-lg bg-white outline-none text-[11px]" />
                         </div>
                         {denrFields.length > 1 && (
-                          <button type="button" onClick={() => removeDenr(index)} className="text-red-600 hover:text-red-800 font-bold px-1 mt-4">✕</button>
+                          <button type="button" onClick={() => removeDenr(index)} className="text-red-600 font-bold p-2 mt-4 hover:bg-red-50 rounded-lg">✕</button>
                         )}
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="space-y-3 pt-2">
+                <div className="space-y-3 pt-3 border-t">
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-[#182848] text-xs uppercase">NAMRIA Survey Team</span>
-                    <button type="button" onClick={() => appendTeam({ name: '', designation: 'FST Member', date: '' })} className="px-3 py-1.5 bg-[#009688] hover:bg-teal-700 text-white font-bold rounded-xl text-xs shadow transition cursor-pointer">
+                    <span className="font-bold text-slate-700 uppercase text-[11px]">NAMRIA Survey Team</span>
+                    <button type="button" onClick={() => appendTeam({ name: '', designation: 'FST Member', date: '' })} className="px-3 py-1.5 bg-[#009688] hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
                       + Add Team Member
                     </button>
                   </div>
                   {teamFields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm">
+                    <div key={field.id} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end bg-slate-50 p-3 rounded-xl border border-slate-200">
                       <div className="sm:col-span-6">
                         <label className="text-[10px] font-bold text-slate-600">Name</label>
-                        <input type="text" {...register(`namriaSurveyTeam.${index}.name` as const, { required: true })} className="w-full border border-slate-300 p-2 rounded-lg bg-white" placeholder="Full Name" />
+                        <input type="text" {...register(`namriaSurveyTeam.${index}.name` as const, { required: true })} className="w-full border p-2 rounded-lg bg-white outline-none" placeholder="Full Name" />
                       </div>
                       <div className="sm:col-span-4">
                         <label className="text-[10px] font-bold text-slate-600">Designation</label>
-                        <input type="text" {...register(`namriaSurveyTeam.${index}.designation` as const, { required: true })} className="w-full border border-slate-300 p-2 rounded-lg bg-white" placeholder="FST Leader / Member" />
+                        <input type="text" {...register(`namriaSurveyTeam.${index}.designation` as const, { required: true })} className="w-full border p-2 rounded-lg bg-white outline-none" placeholder="FST Leader / Member" />
                       </div>
                       <div className="sm:col-span-2 flex items-center gap-2">
                         <div className="flex-1">
                           <label className="text-[10px] font-bold text-slate-600">Date</label>
-                          <input type="date" {...register(`namriaSurveyTeam.${index}.date` as const)} className="w-full border border-slate-300 p-2 rounded-lg bg-white" />
+                          <input type="date" {...register(`namriaSurveyTeam.${index}.date` as const)} className="w-full border p-2 rounded-lg bg-white outline-none text-[11px]" />
                         </div>
                         {teamFields.length > 1 && (
-                          <button type="button" onClick={() => removeTeam(index)} className="text-red-600 hover:text-red-800 font-bold px-1 mt-4">✕</button>
+                          <button type="button" onClick={() => removeTeam(index)} className="text-red-600 font-bold p-2 mt-4 hover:bg-red-50 rounded-lg">✕</button>
                         )}
                       </div>
                     </div>
@@ -530,17 +623,18 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-slate-200 flex justify-end gap-3">
+              {/* ACTION BUTTONS */}
+              <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setView('dashboard')}
-                  className="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl transition cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-8 py-3 bg-[#182848] hover:bg-[#111c33] text-white font-bold rounded-xl shadow-lg border-b-4 border-[#009688] transition cursor-pointer"
+                  className="w-full sm:w-auto px-8 py-3 bg-[#182848] hover:bg-[#111c33] text-white font-bold rounded-xl shadow-lg border-b-4 border-[#009688] transition cursor-pointer"
                 >
                   Save Field Observation Offline
                 </button>
