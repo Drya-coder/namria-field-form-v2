@@ -234,7 +234,7 @@ export default function MainContent() {
               <label className="font-bold text-xs uppercase text-slate-700">1. SKETCH MAP</label>
               <span className="text-[10px] text-slate-500 font-mono">[North Arrow Fixed]</span>
             </div>
-            <p className="text-[11px] text-slate-500">Maaaring iguhit nang direkta gamit ang pen, mouse, o kamay, o kaya ay mag-upload ng larawan.</p>
+            
             
             <SketchPad 
               initialDataUrl={watch('sketchMapDataUrl')}
@@ -242,7 +242,6 @@ export default function MainContent() {
             />
 
             <div className="mt-2">
-              <label className="block text-[10px] font-semibold text-slate-700 mb-1">O mag-upload ng Sketch Map image file:</label>
               <input 
                 type="file" 
                 accept="image/*"
@@ -255,7 +254,7 @@ export default function MainContent() {
           {/* TOP-RIGHT: PICTURE OF CONCRETE MONUMENT */}
           <div className="border border-slate-300 rounded-xl p-4 bg-slate-50 space-y-3">
             <label className="font-bold text-xs uppercase text-slate-700 block">2. Picture of Concrete Monument</label>
-            <p className="text-[11px] text-slate-500">Kunan o i-upload ang larawan ng monolitong kongkreto / corner marker.</p>
+            
             
             <input 
               type="file" 
@@ -276,7 +275,7 @@ export default function MainContent() {
           {/* MIDDLE: PICTURE FACING PROPOSED A&D LAND */}
           <div className="border border-slate-300 rounded-xl p-4 bg-slate-50 space-y-3">
             <label className="font-bold text-xs uppercase text-slate-700 block">3. Picture Facing Proposed A&D Land</label>
-            <p className="text-[11px] text-slate-500">I-upload ang kuha patungo sa Proposed Alienable & Disposable land.</p>
+            
             
             <input 
               type="file" 
@@ -295,7 +294,7 @@ export default function MainContent() {
           {/* BOTTOM: PICTURE FACING PROPOSED FORESTLAND */}
           <div className="border border-slate-300 rounded-xl p-4 bg-slate-50 space-y-3">
             <label className="font-bold text-xs uppercase text-slate-700 block">4. Picture Facing Proposed Forestland</label>
-            <p className="text-[11px] text-slate-500">I-upload ang kuha patungo sa Proposed Forestland.</p>
+            
             
             <input 
               type="file" 

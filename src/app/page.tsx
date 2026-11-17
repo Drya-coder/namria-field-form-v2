@@ -434,7 +434,7 @@ export default function Home() {
                       <label className="font-bold text-xs uppercase text-slate-700">1. Sketch Map</label>
                       <span className="text-[10px] text-slate-500 font-mono">[North Arrow Fixed]</span>
                     </div>
-                    <p className="text-[11px] text-slate-500">I-upload o iguhit ang sketch map kasama ang mga kalapit na landmark.</p>
+                  
                     
                     <input 
                       type="file" 
@@ -462,7 +462,7 @@ export default function Home() {
                   {/* TOP-RIGHT: PICTURE OF CONCRETE MONUMENT */}
                   <div className="border border-slate-300 rounded-xl p-4 bg-slate-50 space-y-3">
                     <label className="font-bold text-xs uppercase text-slate-700 block">2. Picture of Concrete Monument</label>
-                    <p className="text-[11px] text-slate-500">Kunan o i-upload ang larawan ng monolitong kongkreto / corner marker.</p>
+                  
                     
                     <input 
                       type="file" 
@@ -492,7 +492,7 @@ export default function Home() {
                   {/* MIDDLE: PICTURE FACING PROPOSED A&D LAND */}
                   <div className="border border-slate-300 rounded-xl p-4 bg-slate-50 space-y-3">
                     <label className="font-bold text-xs uppercase text-slate-700 block">3. Picture Facing Proposed A&D Land</label>
-                    <p className="text-[11px] text-slate-500">I-upload ang kuha patungo sa Proposed Alienable & Disposable land.</p>
+                    
                     
                     <input 
                       type="file" 
@@ -520,7 +520,7 @@ export default function Home() {
                   {/* BOTTOM: PICTURE FACING PROPOSED FORESTLAND */}
                   <div className="border border-slate-300 rounded-xl p-4 bg-slate-50 space-y-3">
                     <label className="font-bold text-xs uppercase text-slate-700 block">4. Picture Facing Proposed Forestland</label>
-                    <p className="text-[11px] text-slate-500">I-upload ang kuha patungo sa Proposed Forestland.</p>
+                    
                     
                     <input 
                       type="file" 

@@ -71,7 +71,6 @@ export async function exportObservationToPDF(obs: FieldObservation) {
     console.error("Hindi na-load ang logo:", err);
   }
 
-  // Ginawang BOLD at inayos ang spacing para sa header titles
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9); // Medyo pinalaki para sa bold effect
   doc.text('FIELD OBSERVATION FOR LAND CLASSIFICATION', margin + 25 + (usableWidth - 25) / 2, y + 8, { align: 'center', charSpace: 0.4 } as any);
@@ -79,7 +78,6 @@ export async function exportObservationToPDF(obs: FieldObservation) {
 
   drawLine(margin + 25, y + 18, pageWidth - margin, y + 18);
   
-  // Form Title style
   doc.setFontSize(7.5);
   doc.setFont('helvetica', 'bold');
   doc.text(obs.formTitle || 'NAMRIA-ENRM-Forms18 Vers00', margin + 27, y + 22.5, { charSpace: 0.2 } as any);
@@ -87,7 +85,6 @@ export async function exportObservationToPDF(obs: FieldObservation) {
   y += headerHeight;
   drawLine(margin, y, pageWidth - margin, y);
 
-  // --- SECTION I: PRE-DETERMINED CORNER DESCRIPTION ---
   renderSectionHeader('PRE-DETERMINED CORNER DESCRIPTION', 6.5, 8.5);
 
   doc.setFontSize(8);
@@ -125,7 +122,6 @@ export async function exportObservationToPDF(obs: FieldObservation) {
   y += 6;
   drawLine(margin, y, pageWidth - margin, y);
 
-  // Location details
   doc.setFont('helvetica', 'bold');
   doc.text('Sitio/Purok:', margin + 2, y + 4);
   doc.setFont('helvetica', 'normal');
@@ -152,7 +148,6 @@ export async function exportObservationToPDF(obs: FieldObservation) {
   y += 6;
   drawLine(margin, y, pageWidth - margin, y);
 
-  // --- TO BE FILLED OUT UPON THE APPROVAL OF THE PROPOSED LC MAP ---
   renderSectionHeader('TO BE FILLED OUT UPON THE APPROVAL OF THE PROPOSED LC MAP', 6.5, 8);
 
   doc.setFontSize(7.5);
@@ -162,7 +157,6 @@ export async function exportObservationToPDF(obs: FieldObservation) {
   y += 5.5;
   drawLine(margin, y, pageWidth - margin, y);
 
-  // --- SECTION II: RECORD OF GNSS COORDINATES ---
   renderSectionHeader('RECORD OF GNSS COORDINATES', 6.5, 8.5);
 
   doc.setFontSize(8);
@@ -232,7 +226,6 @@ export async function exportObservationToPDF(obs: FieldObservation) {
     drawLine(margin, y, pageWidth - margin, y);
   });
 
-  // --- DATUM, ACCURACY, BASE STATION & ANTENNA HEIGHT BLOCK ---
   const row5Y = y;
   const blockHeight = 10;
 
@@ -278,7 +271,6 @@ export async function exportObservationToPDF(obs: FieldObservation) {
   y = row5Y + blockHeight;
   drawLine(margin, y, pageWidth - margin, y);
 
-  // --- SECTION III: OTHER RELEVANT INFORMATION ---
   renderSectionHeader('OTHER RELEVANT INFORMATION', 6.5, 8.5);
 
   const infoBoxHeight = 26;
