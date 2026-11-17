@@ -50,7 +50,7 @@ export async function exportObservationToPDF(obs: FieldObservation) {
     doc.rect(margin, y, usableWidth, height, 'F');
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(fontSize);
-    doc.text(title, pageWidth / 2, y + (height / 2) + 1, { align: 'center' });
+    doc.text(title, pageWidth / 2, y + (height / 2) + 1, { align: 'center', charSpace: 0.3 } as any);
     y += height;
     drawLine(margin, y, pageWidth - margin, y);
   };
@@ -61,25 +61,28 @@ export async function exportObservationToPDF(obs: FieldObservation) {
   drawRect(margin, y, usableWidth, 277);
 
   // --- HEADER WITH NAMRIA LOGO ---
-  const headerHeight = 22;
+  const headerHeight = 26; 
   drawRect(margin, y, 25, headerHeight);
   
   try {
     const logoDataUrl = await loadImage('/namria%20logo.png');
-    doc.addImage(logoDataUrl, 'PNG', margin + 1.2, y + 2.2, 17.6, 17.6);
+    doc.addImage(logoDataUrl, 'PNG', margin + 1.2, y + 3.2, 18.6, 18.6);
   } catch (err) {
     console.error("Hindi na-load ang logo:", err);
   }
 
+  // Ginawang BOLD at inayos ang spacing para sa header titles
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9.5);
-  doc.text('FIELD OBSERVATION FOR LAND CLASSIFICATION', margin + 25 + (usableWidth - 25) / 2, y + 7, { align: 'center', charSpace: 0.6 });
-  doc.text('OF UNCLASSIFIED PUBLIC FOREST', margin + 25 + (usableWidth - 25) / 2, y + 13, { align: 'center', charSpace: 0.6 });
+  doc.setFontSize(9); // Medyo pinalaki para sa bold effect
+  doc.text('FIELD OBSERVATION FOR LAND CLASSIFICATION', margin + 25 + (usableWidth - 25) / 2, y + 8, { align: 'center', charSpace: 0.4 } as any);
+  doc.text('OF UNCLASSIFIED PUBLIC FOREST', margin + 25 + (usableWidth - 25) / 2, y + 14.5, { align: 'center', charSpace: 0.4 } as any);
 
-  drawLine(margin + 25, y + 16, pageWidth - margin, y + 16);
-  doc.setFontSize(7);
+  drawLine(margin + 25, y + 18, pageWidth - margin, y + 18);
+  
+  // Form Title style
+  doc.setFontSize(7.5);
   doc.setFont('helvetica', 'bold');
-  doc.text(obs.formTitle || 'NAMRIA-ENRM-Form18 Ver3 Rev00', margin + 27, y + 19.5);
+  doc.text(obs.formTitle || 'NAMRIA-ENRM-Forms18 Vers00', margin + 27, y + 22.5, { charSpace: 0.2 } as any);
 
   y += headerHeight;
   drawLine(margin, y, pageWidth - margin, y);
@@ -154,7 +157,7 @@ export async function exportObservationToPDF(obs: FieldObservation) {
 
   doc.setFontSize(7.5);
   doc.setFont('helvetica', 'normal');
-  const approvalText = `Corner No. ${(obs as any).approvalAdCornerNo || '___'}, Block No. ${(obs as any).approvalAdBlockNo || '___'}, A&D, Proj. No. ${(obs as any).approvalAdProjNo || '___'}, LC No. ${(obs as any).approvalAdLcNo || '___'}        Corner No. ${(obs as any).approvalFlCornerNo || '___'}, Block No. ${(obs as any).approvalFlBlockNo || '___'}, FL, Proj. No. ${(obs as any).approvalFlProjNo || '___'}, LC No. ${(obs as any).approvalFlLcNo || '___'}`;
+  const approvalText = `Corner No. ${(obs as any).approvalAdCornerNo || '___'}, Block No. ${(obs as any).approvalAdBlockNo || '___'}, A&D, Proj. No. ${(obs as any).approvalAdProjNo || '___'}, LC No. ${(obs as any).approvalAdLcNo || '___'}       Corner No. ${(obs as any).approvalFlCornerNo || '___'}, Block No. ${(obs as any).approvalFlBlockNo || '___'}, FL, Proj. No. ${(obs as any).approvalFlProjNo || '___'}, LC No. ${(obs as any).approvalFlLcNo || '___'}`;
   doc.text(approvalText, margin + 2, y + 4);
   y += 5.5;
   drawLine(margin, y, pageWidth - margin, y);
@@ -188,13 +191,11 @@ export async function exportObservationToPDF(obs: FieldObservation) {
   y += 5;
   drawLine(margin, y, pageWidth - margin, y);
 
-  // Eksaktong X coordinates para sa mga kolum (Kaliwa: 60mm, Kanan: 135mm)
   const col1Width = 60;
   const col2Width = 75; 
-  const line1X = margin + col1Width; // 70mm
-  const line2X = line1X + col2Width; // 145mm
+  const line1X = margin + col1Width; 
+  const line2X = line1X + col2Width; 
 
-  // Sub-header ng Instrument table
   doc.setFillColor(235, 235, 235);
   doc.rect(margin, y, usableWidth, 5, 'F');
   doc.setFont('helvetica', 'bold');
@@ -222,10 +223,10 @@ export async function exportObservationToPDF(obs: FieldObservation) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8);
     doc.text(row.label, margin + 2, y + (row.height / 2) + 1);
-    drawLine(line1X, y, line1X, y + row.height); // Eksaktong pantay na linya
+    drawLine(line1X, y, line1X, y + row.height); 
     doc.setFont('helvetica', 'normal');
     doc.text(row.valAd, line1X + 2, y + (row.height / 2) + 1, { maxWidth: col2Width - 4 });
-    drawLine(line2X, y, line2X, y + row.height); // Eksaktong pantay na linya
+    drawLine(line2X, y, line2X, y + row.height); 
     doc.text(row.valForest, line2X + 2, y + (row.height / 2) + 1, { maxWidth: usableWidth - col1Width - col2Width - 4 });
     y += row.height;
     drawLine(margin, y, pageWidth - margin, y);
@@ -236,8 +237,8 @@ export async function exportObservationToPDF(obs: FieldObservation) {
   const blockHeight = 10;
 
   drawRect(margin, row5Y, usableWidth, blockHeight);
-  drawLine(line1X, row5Y, line1X, row5Y + blockHeight); // Pantay na linya pababa
-  drawLine(line2X, row5Y, line2X, row5Y + blockHeight); // Pantay na linya pababa
+  drawLine(line1X, row5Y, line1X, row5Y + blockHeight); 
+  drawLine(line2X, row5Y, line2X, row5Y + blockHeight); 
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
@@ -409,7 +410,7 @@ export async function exportObservationToPDF(obs: FieldObservation) {
   drawLine(margin, y, pageWidth - margin, y);
 
   const repHeaders = ['Name', 'Office', 'Designation', 'Signature', 'Date (DD/MM/YYYY)'];
-  const repWidths = [45, 38, 42, 30, 35]; // Sum = 190mm
+  const repWidths = [45, 38, 42, 30, 35]; 
   
   let rx = margin;
   const repHeaderHeight = 4.5;
@@ -468,7 +469,7 @@ export async function exportObservationToPDF(obs: FieldObservation) {
 
   const teamHeaders = ['Name', 'Designation', 'Signature', 'Date (DD/MM/YYYY)'];
   const prepWidth = 25; 
-  const teamWidths = [60, 45, 30, 30]; // Sum = 165mm + prepWidth(25) = 190mm
+  const teamWidths = [60, 45, 30, 30]; 
   
   let tx = margin + prepWidth;
   teamHeaders.forEach((th, i) => {
@@ -531,10 +532,10 @@ export async function exportObservationToPDF(obs: FieldObservation) {
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
-  doc.text('NAMRIA FIELD OBSERVATION FORM - PAGE 2: PHOTO DOCUMENTATION & SKETCH MAP', pageWidth / 2, p2y + 5, { align: 'center' });
+  doc.text('NAMRIA FIELD OBSERVATION FORM - PAGE 2: PHOTO DOCUMENTATION & SKETCH MAP', pageWidth / 2, p2y + 5, { align: 'center', charSpace: 0.3 } as any);
   doc.setFontSize(7);
   doc.setFont('helvetica', 'bold');
-  doc.text(`Corner No.: ${obs.cornerNo || 'N/A'} | Location: ${obs.barangay || ''}, ${obs.municipality || ''}, ${obs.province || ''}`, pageWidth / 2, p2y + 10, { align: 'center' });
+  doc.text(`Corner No.: ${obs.cornerNo || 'N/A'} | Location: ${obs.barangay || ''}, ${obs.municipality || ''}, ${obs.province || ''}`, pageWidth / 2, p2y + 10, { align: 'center', charSpace: 0.2 } as any);
   
   p2y += 14;
   drawLine(margin, p2y, pageWidth - margin, p2y);
@@ -547,7 +548,7 @@ export async function exportObservationToPDF(obs: FieldObservation) {
     doc.rect(x, y, w, 6, 'F');
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(7);
-    doc.text(title, x + (w / 2), y + 4, { align: 'center' });
+    doc.text(title, x + (w / 2), y + 4, { align: 'center', charSpace: 0.3 } as any);
 
     if (dataUrl) {
       try {
